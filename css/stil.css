@@ -1,5 +1,9 @@
 body {
-  background-color: lightblue;
+ background-image: url("../bilder/Australia.jpg");
+  background-size: cover;
+ background-repeat: no-repeat;
+  background-position: center;
+  min-height: 100vh; /* Sørger for at body alltid dekker hele høyden */
 }
 .container {
   display: grid;
