@@ -3,18 +3,30 @@ body {
   background-size: cover;
  background-repeat: no-repeat;
   background-position: center;
-  min-height: 100vh; /* Sørger for at body alltid dekker hele høyden */
+  min-height: 90vh; /* Sørger for at body alltid dekker hele høyden */
+  margin: 0;
 }
 .container {
   display: grid;
   grid-template-columns: auto auto auto;
   background-color: dodgerblue;
-  padding: 10px;
+  padding: 20px;
+  gap: 10px;
+  border: 2px solid black;
+  margin: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 .container > div {
   background-color: #f1f1f1;
   border: 1px solid black;
-  padding: 10px;
+  padding: 20px;
   font-size: 30px;
   text-align: center;
+}
+
+header, footer {
+  text-align: center;
+  padding: 30px;
+  background-color: #202d63;
 }
