@@ -5,6 +5,7 @@ body {
   background-position: center;
   min-height: 90vh; /* Sørger for at body alltid dekker hele høyden */
   margin: 0;
+  color: rgb(255, 255, 255);
 }
 .container {
   display: grid;
@@ -16,6 +17,7 @@ body {
   margin: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: #134c9d;
 }
 .container > div {
   background-color: #f1f1f1;
@@ -24,6 +26,61 @@ body {
   font-size: 30px;
   text-align: center;
 }
+/* Styling for knappen */
+.button-link {
+  display: inline-block; /* Gjør at lenken kan ha bredde/høyde og padding */
+  padding: 10px 20px; /* Indre avstand (padding) */
+  background-color: #007bff; /* Bakgrunnsfarge (en blåtone) */
+  color: white; /* Tekstfarge */
+  text-decoration: none; /* Fjerner understrekingen */
+  border-radius: 5px; /* Avrundede hjørner */
+  font-weight: bold; /* Gjør teksten fet */
+  font-family: Arial, sans-serif; /* Skrifttype */
+}
+ 
+/* Hover-effekt når musen er over knappen */
+.button-link:hover {
+  background-color: #0056b3; /* Endrer farge når man holder musen over */
+}
+
+
+
+ 
+
+ 
+
+@media screen and (max-width: 600px) {
+  /* @media: Dette er selve media query-regelen som starter et betinget stilblokk. */
+  /* screen: Spesifiserer at disse reglene kun skal gjelde for skjermer (ikke for utskrift, for eksempel). */
+  /* and: Kobler sammen media-typen og media-egenskapen. */
+  /* (max-width: 600px): Dette er media-egenskapen som betyr at stilene inni parentesene bare aktiveres når bredden på visningsområdet (viewport) er 600 piksler eller mindre. */
+  body {
+    background-color: #f0f0f0; /* Endrer bakgrunnsfargen til lys grå kun på små skjermer. */
+  }
+  .container {
+    width: 95%; /* Gir en "container"-div en bredde på 95% av skjermen, med litt luft på sidene. */
+  }
+  h1 {
+    font-size: 1.5em; /* Reduserer fontstørrelsen for h1-overskriften for bedre lesbarhet på små skjermer. */
+  }
+}
+
+/* --- */
+
+/* Regler som bare gjelder for skjermer med en bredde på 1200 piksler eller mer */
+@media screen and (min-width: 1200px) {
+  /* @media screen and (min-width: 1200px): Denne regelen aktiveres når visningsområdet er 1200 piksler eller bredere. */
+  body {
+    background-color: #e0e0e0; /* Endrer bakgrunnsfargen til en litt mørkere grå kun på store skjermer. */
+  }
+  .container {
+    width: 95%; /* Setter en fast bredde på 1100 piksler for "container"-diven for å unngå at innholdet strekkes for langt. */
+  }
+  h1 {
+    font-size: 3em; /* Øker fontstørrelsen for h1-overskriften for å fylle ut mer av plassen på store skjermer. */
+  }
+}
+
 
 header, footer {
   text-align: center;
