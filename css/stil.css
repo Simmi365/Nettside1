@@ -1,89 +1,118 @@
+/* Sørger for at footeren alltid er nederst */
+html, body {
+  height: 100%; /* Sørger for at både <html> og <body> dekker hele høyden av vinduet */
+  margin: 0; /* Fjerner standard margin */
+  padding: 0; /* Fjerner standard padding */
+}
+
+.header-buttons {                       /* Container for header-knapper */
+  display: flex;                        /* Flexbox for knapper */
+  gap: 1rem;                            /* Avstand mellom knapper */
+  list-style: none;                     /* Fjerner punktmerking */
+  margin: 0;                            /* Fjerner marg */
+  padding: 0;                           /* Fjerner padding */
+}
+ 
+.button-link {                          /* Stil for knapp-lenker */
+  background: #60794C;                  /* Bakgrunnsfarge på knapp */
+  color: #333;                          /* Tekstfarge */
+  padding: 0.8em 1.5em;                 /* Indre marg på knapp */
+  border-radius: 4px;                   /* Runde hjørner */
+  text-decoration: none;                /* Fjerner understrek */
+  transition: background 0.2s;          /* Animasjon ved hover */
+}
+.button-link:hover {                    /* Hover-effekt på knapp */
+  background: #84a06d;                  /* Lysere bakgrunn ved hover */
+}
+
+/*---------------------------------------------------------------------------------------------*/
+
 body {
- background-image: url("../bilder/Australia.jpg");
+  display: flex; /* Bruker flexbox for å organisere innholdet */
+  flex-direction: column; /* Plasserer elementene i en kolonne (vertikalt) */
+  background-image: url("../bilder/Australia.jpg");
   background-size: cover;
- background-repeat: no-repeat;
+  background-repeat: no-repeat;
   background-position: center;
-  min-height: 90vh; /* Sørger for at body alltid dekker hele høyden */
-  margin: 0;
   color: rgb(255, 255, 255);
 }
-.container {
-  display: grid;
-  grid-template-columns: auto auto auto;
-  background-color: dodgerblue;
-  padding: 20px;
-  gap: 10px;
-  border: 2px solid black;
-  margin: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  color: #134c9d;
+
+main {
+  flex: 1; /* Sørger for at <main> tar opp all tilgjengelig plass mellom header og footer */
+  display: grid; /* Bruker grid-layout for innholdet i main */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Dynamisk grid med kolonner */
+  gap: 10px; /* Avstand mellom grid-elementene */
+  padding: 20px; /* Indre avstand for main */
 }
-.container > div {
-  background-color: #f1f1f1;
-  border: 1px solid black;
-  padding: 20px;
-  font-size: 30px;
-  text-align: center;
+
+main > div {
+  background-color: #f1f1f1; /* Bakgrunnsfarge for hver grid-boks */
+  border: 1px solid black; /* Kantlinje rundt hver boks */
+  padding: 20px; /* Indre avstand for hver boks */
+  font-size: 20px; /* Fontstørrelse for teksten i boksene */
+  text-align: center; /* Sentraliserer teksten */
+  border-radius: 8px; /* Avrundede hjørner */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Legger til en skyggeeffekt */
 }
-/* Styling for knappen */
+
+/* Styling for lenkene som knapper */
 .button-link {
   display: inline-block; /* Gjør at lenken kan ha bredde/høyde og padding */
   padding: 10px 20px; /* Indre avstand (padding) */
   background-color: #007bff; /* Bakgrunnsfarge (en blåtone) */
   color: white; /* Tekstfarge */
+  list-style: none;   /* Fjerner punktmerking */
   text-decoration: none; /* Fjerner understrekingen */
   border-radius: 5px; /* Avrundede hjørner */
   font-weight: bold; /* Gjør teksten fet */
   font-family: Arial, sans-serif; /* Skrifttype */
 }
- 
+main {
+  flex: 1; /* Sørger for at <main> tar opp all tilgjengelig plass mellom header og footer */
+  display: grid; /* Bruker grid-layout for innholdet i main */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Dynamisk grid med kolonner */
+  grid-auto-rows: 100px; /* Setter en fast høyde for alle rader */
+  gap: 10px; /* Avstand mellom grid-elementene */
+  padding: 20px; /* Indre avstand for main */
+}
+
+
+
 /* Hover-effekt når musen er over knappen */
 .button-link:hover {
   background-color: #0056b3; /* Endrer farge når man holder musen over */
 }
 
-
-
- 
-
- 
-
-@media screen and (max-width: 600px) {
-  /* @media: Dette er selve media query-regelen som starter et betinget stilblokk. */
-  /* screen: Spesifiserer at disse reglene kun skal gjelde for skjermer (ikke for utskrift, for eksempel). */
-  /* and: Kobler sammen media-typen og media-egenskapen. */
-  /* (max-width: 600px): Dette er media-egenskapen som betyr at stilene inni parentesene bare aktiveres når bredden på visningsområdet (viewport) er 600 piksler eller mindre. */
-  body {
-    background-color: #f0f0f0; /* Endrer bakgrunnsfargen til lys grå kun på små skjermer. */
-  }
-  .container {
-    width: 95%; /* Gir en "container"-div en bredde på 95% av skjermen, med litt luft på sidene. */
-  }
-  h1 {
-    font-size: 1.5em; /* Reduserer fontstørrelsen for h1-overskriften for bedre lesbarhet på små skjermer. */
-  }
-}
-
-/* --- */
-
-/* Regler som bare gjelder for skjermer med en bredde på 1200 piksler eller mer */
-@media screen and (min-width: 1200px) {
-  /* @media screen and (min-width: 1200px): Denne regelen aktiveres når visningsområdet er 1200 piksler eller bredere. */
-  body {
-    background-color: #e0e0e0; /* Endrer bakgrunnsfargen til en litt mørkere grå kun på store skjermer. */
-  }
-  .container {
-    width: 95%; /* Setter en fast bredde på 1100 piksler for "container"-diven for å unngå at innholdet strekkes for langt. */
-  }
-  h1 {
-    font-size: 3em; /* Øker fontstørrelsen for h1-overskriften for å fylle ut mer av plassen på store skjermer. */
-  }
-}
-
-
-header, footer {
+/* Footer-styling */
+footer {
   text-align: center;
   padding: 30px;
   background-color: #202d63;
+  color: white; /* Gjør teksten i footeren hvit for bedre kontrast */
+}
+
+/* Responsiv design for små skjermer */
+@media screen and (max-width: 600px) {
+  body {
+    background-color: #f0f0f0; /* Endrer bakgrunnsfargen til lys grå kun på små skjermer */
+  }
+  main {
+    grid-template-columns: 1fr; /* Endrer grid-layout til én kolonne på små skjermer */
+  }
+  h1 {
+    font-size: 1.5em; /* Reduserer fontstørrelsen for h1-overskriften */
+  }
+}
+
+/* Responsiv design for store skjermer */
+@media screen and (min-width: 1200px) {
+  body {
+    background-color: #e0e0e0; /* Endrer bakgrunnsfargen til en litt mørkere grå kun på store skjermer */
+  }
+  main {
+    grid-template-columns: repeat(4, 1fr); /* Fire kolonner på store skjermer */
+  }
+  h1 {
+    font-size: 3em; /* Øker fontstørrelsen for h1-overskriften */
+  }
 }
