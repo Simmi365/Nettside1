@@ -9,17 +9,31 @@ html, body {
   display: flex;                        /* Flexbox for knapper */
   gap: 1rem;                            /* Avstand mellom knapper */
   list-style: none;                     /* Fjerner punktmerking */
-  margin: 0;                            /* Fjerner marg */
+  margin: 0;                         /* Fjerner padding */     /* Fjerner marg */
   padding: 0;                           /* Fjerner padding */
+
 }
- 
+ nav  {
+  text-decoration: none;                /* Fjerner understrek på lenker */
+  color: #333;                          /* Tekstfarge */
+  font-weight: bold;                    /* Gjør teksten fet */
+  font-family: Arial, sans-serif;       /* Skrifttype */
+  text-align: right;                  /* Justerer tekst til høyre */
+}
+.header-flex {
+  display: flex;
+  justify-content: space-between; /* Plasserer h1 til venstre og nav til høyre */
+  align-items: center;             /* Sentraliserer vertikalt */
+  padding: 0 20px;                 /* Litt luft på sidene */
+}
 .button-link {                          /* Stil for knapp-lenker */
   background: #60794C;                  /* Bakgrunnsfarge på knapp */
   color: #333;                          /* Tekstfarge */
   padding: 0.8em 1.5em;                 /* Indre marg på knapp */
-  border-radius: 4px;                   /* Runde hjørner */
+  border-radius: 16px;                   /* Runde hjørner */
   text-decoration: none;                /* Fjerner understrek */
-  transition: background 0.2s;          /* Animasjon ved hover */
+  transition: background 0.2s;  
+  border: 1px solid #333;        /* Animasjon ved hover */
 }
 .button-link:hover {                    /* Hover-effekt på knapp */
   background: #84a06d;                  /* Lysere bakgrunn ved hover */
