@@ -1,0 +1,386 @@
+
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Donasjon med animasjon</title>
+<style>
+  :root {
+    --scene-w: 520px;
+    --scene-h: 280px;
+  }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f7f7fb;
+    color: #222;
+  }
+
+  .scene {
+    width: var(--scene-w);
+    height: var(--scene-h);
+    margin: 40px auto 12px;
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+    overflow: hidden;
+  }
+
+  /* --- Donasjonskontroll i midten --- */
+  .control {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    gap: 10px;
+    background: #fafafa;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+
+  .control label {
+    font-weight: 700;
+  }
+
+  .amount-wrap {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    gap: 6px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 2px 6px;
+  }
+
+  .amount-wrap span.currency {
+    font-weight: 700;
+    color: #334155;
+  }
+
+  .amount-wrap input[type="number"] {
+    width: 100px;
+    padding: 6px 6px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+  }
+
+  .nudge {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 6px;
+  }
+
+  .btn {
+    padding: 6px 12px;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    background: #4f46e5; /* indigo */
+    color: #fff;
+    cursor: pointer;
+  }
+  .btn:hover { background: #4338ca; }
+  .btn.secondary { background: #64748b; }
+  .btn.secondary:hover { background: #475569; }
+  .btn:disabled { background: #b7b7d6; cursor: not-allowed; }
+
+  .hint {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #666;
+  }
+
+  /* --- Indikator-cuber som peker mot input-boksen --- */
+  .indicator {
+    position: absolute;
+    top: 18px;
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    background: #e2e8f0; /* grå-blå */
+  }
+
+  .indicator.left  { left: 20px; }
+  .indicator.right { right: 20px; }
+
+  /* Piler som peker mot midten (input-boksen) */
+  .indicator.left::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -16px;
+    transform: translateY(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent transparent transparent #64748b; /* pil mot høyre */
+  }
+  .indicator.right::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -16px;
+    transform: translateY(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent #64748b transparent transparent; /* pil mot venstre */
+  }
+
+  .indicator span {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #334155;
+    text-align: center;
+    padding: 4px;
+  }
+
+  /* --- Animert kube med fase-tekster --- */
+  #boks {
+    position: absolute;
+    /* Startpos midt nede i scenen */
+    top: 130px;
+    left: 60px;
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    background: red;
+  }
+
+  /* Tekst som følger kuben og står over, midtstilt */
+  .label {
+    position: absolute;
+    top: -36px;                 /* over kuben */
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+    opacity: 0;
+
+    /* Hollow/outline-effekt */
+    color: transparent;
+    -webkit-text-stroke: 2px currentColor;
+    text-shadow: 0 0 0 currentColor;
+  }
+
+  .label.red    { color: red; }
+  .label.blue   { color: blue; }
+  .label.purple { color: purple; }
+
+  /* Synlighet per fase (6s syklus) – JS setter play state */
+  .label.red    { animation: visRed 6s linear paused; }
+  .label.blue   { animation: visBlue 6s linear paused; }
+  .label.purple { animation: visPurple 6s linear paused; }
+
+  /* Bevegelse + fargefaser (6s per syklus). JS setter iteration-count og state. */
+  @keyframes veksleMedFarge {
+    /* RØD fase – vertikal */
+    0%   { top: 130px; left: 60px;  background-color: red; }
+    16.5%{ top: 230px; left: 60px;  background-color: red; }
+    33%  { top: 130px; left: 60px;  background-color: red; }
+
+    /* BLÅ fase – horisontal */
+    49.5%{ top: 130px; left: 160px; background-color: blue; }
+    66%  { top: 130px; left: 60px;  background-color: blue; }
+
+    /* LILLA fase – diagonal */
+    83%  { top: 230px; left: 160px; background-color: purple; }
+    100% { top: 130px; left: 60px;  background-color: purple; }
+  }
+
+  /* Synlighet for label-tekstene */
+  @keyframes visRed {
+    0%    { opacity: 1; }
+    32.99%{ opacity: 1; }
+    33%   { opacity: 0; }
+    100%  { opacity: 0; }
+  }
+  @keyframes visBlue {
+    0%    { opacity: 0; }
+    32.99%{ opacity: 0; }
+    33%   { opacity: 1; }
+    65.99%{ opacity: 1; }
+    66%   { opacity: 0; }
+    100%  { opacity: 0; }
+  }
+  @keyframes visPurple {
+    0%    { opacity: 0; }
+    65.99%{ opacity: 0; }
+    66%   { opacity: 1; }
+    100%  { opacity: 1; }
+  }
+
+  /* Status-tekst under scenen */
+  .status {
+    width: var(--scene-w);
+    margin: 8px auto 0;
+    text-align: center;
+    font-size: 13px;
+    color: #475569;
+  }
+</style>
+</head>
+<body>
+
+  <div class="scene" aria-label="Donasjonsscene med kontroller">
+    <!-- Indikator-cuber som peker mot input-boksen -->
+    <div class="indicator left"><span>Skriv beløp</span></div>
+    <div class="indicator right"><span>Trykk Doner</span></div>
+
+    <!-- Donasjonskontroll -->
+    <form class="control" id="donateForm" onsubmit="return false;">
+      <label for="amount">Donér:</label>
+      <div class="amount-wrap">
+        <span class="currency">NOK</span>
+        <input id="amount" type="number" min="1" step="1" value="100" inputmode="numeric" />
+      </div>
+      <div class="nudge">
+        <button class="btn secondary" type="button" id="minus50">−50</button>
+        <button class="btn secondary" type="button" id="plus50">+50</button>
+      </div>
+      <button class="btn" id="donateBtn" type="button">Doner</button>
+      <button class="btn secondary" id="pauseBtn" type="button" disabled>Paus</button>
+    </form>
+    <div class="hint">Skriv beløp (NOK) og trykk <strong>Doner</strong>. Dette er en demo – ingen ekte betaling.</div>
+
+    <!-- Selve kuben med tekster -->
+    <div id="boks">
+      <span class="label red"   id="labelRed">Reversal Red – 100 NOK</span>
+      <span class="label blue"  id="labelBlue">Lapse Blue – 100 NOK</span>
+      <span class="label purple" id="labelPurple">Hollow Purple – Doner 100 NOK</span>
+    </div>
+  </div>
+
+  <div class="status" id="status">Klar.</div>
+
+<script>
+  const NOK = new Intl.NumberFormat('no-NO');
+
+  const box = document.getElementById('boks');
+  const status = document.getElementById('status');
+  const amountInput = document.getElementById('amount');
+  const donateBtn = document.getElementById('donateBtn');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const minus50 = document.getElementById('minus50');
+  const plus50 = document.getElementById('plus50');
+
+  const labelRed = document.getElementById('labelRed');
+  const labelBlue = document.getElementById('labelBlue');
+  const labelPurple = document.getElementById('labelPurple');
+
+  // Label-anim. styres i sync med boksen
+  const labels = [labelRed, labelBlue, labelPurple];
+
+  function setLabelsPlayState(state) {
+    labels.forEach(el => el.style.animationPlayState = state);
+  }
+
+  function setLabelsIteration(iter) {
+    labels.forEach(el => {
+      const name = el.classList.contains('red') ? 'visRed'
+                 : el.classList.contains('blue') ? 'visBlue'
+                 : 'visPurple';
+      el.style.animation = `${name} 6s linear ${iter}`;
+    });
+  }
+
+  function updateLabelsText(amount) {
+    const fmt = `${NOK.format(amount)} NOK`;
+    labelRed.textContent   = `Reversal Red – ${fmt}`;
+    labelBlue.textContent  = `Lapse Blue – ${fmt}`;
+    labelPurple.textContent= `Hollow Purple – Doner ${fmt}`;
+  }
+
+  function clampAmount(val) {
+    const n = Math.floor(Number(val || 0));
+    return Math.max(1, Math.min(1_000_000, n)); // enkle grenser
+  }
+
+  // Oppdater tekst når beløpet endres
+  amountInput.addEventListener('input', () => {
+    const v = clampAmount(amountInput.value);
+    amountInput.value = v;
+    updateLabelsText(v);
+  });
+
+  minus50.addEventListener('click', () => {
+    const v = clampAmount((amountInput.value || 0) - 50);
+    amountInput.value = v;
+    updateLabelsText(v);
+  });
+
+  plus50.addEventListener('click', () => {
+    const v = clampAmount((amountInput.value || 0) + 50);
+    amountInput.value = v;
+    updateLabelsText(v);
+  });
+
+  // Start en donasjonsanimasjon (1 syklus), så "kvittering"
+  donateBtn.addEventListener('click', () => {
+    const amount = clampAmount(amountInput.value);
+    amountInput.value = amount;
+    updateLabelsText(amount);
+
+    // Sett én syklus og kjør
+    box.style.animation = `veksleMedFarge 6s linear 1`;
+    void box.offsetWidth; // reflow for å starte på nytt
+
+    setLabelsIteration(1);
+    setLabelsPlayState('running');
+
+    donateBtn.disabled = true;
+    pauseBtn.disabled = false;
+    status.textContent = `Behandler donasjon på ${NOK.format(amount)} NOK …`;
+  });
+
+  // Pause/fortsett animasjonen
+  pauseBtn.addEventListener('click', () => {
+    const current = getComputedStyle(box).animationPlayState;
+    if (current !== 'paused') {
+      box.style.animationPlayState = 'paused';
+      setLabelsPlayState('paused');
+      pauseBtn.textContent = 'Fortsett';
+      status.textContent = 'Pauset.';
+    } else {
+      box.style.animationPlayState = 'running';
+      setLabelsPlayState('running');
+      pauseBtn.textContent = 'Paus';
+      status.textContent = 'Fortsetter …';
+    }
+  });
+
+  // Ferdig etter én syklus
+  box.addEventListener('animationend', (e) => {
+    if (e.animationName === 'veksleMedFarge') {
+      donateBtn.disabled = false;
+      pauseBtn.disabled = true;
+      pauseBtn.textContent = 'Paus';
+      const amount = clampAmount(amountInput.value);
+      status.textContent = `Takk for donasjonen på ${NOK.format(amount)} NOK! (Demo)`;
+      setLabelsPlayState('paused');
+    }
+  });
+
+  // Init labels med default verdi
+  updateLabelsText(clampAmount(amountInput.value));
+</script>
+</body>
+</html>
